@@ -9,127 +9,255 @@
 <script src="firebase-config.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js" type="module"></script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* ── RESET ── */
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0f;color:#f0f0f8;font-family:'DM Sans',sans-serif;min-height:100vh}
-header{padding:1.2rem 2rem;border-bottom:1px solid #2a2a38;display:flex;align-items:center;justify-content:space-between;background:#13131a}
-.logo{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,#4ade80,#16a34a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.logo small{font-size:0.7rem;font-family:'DM Sans',sans-serif;font-weight:400;-webkit-text-fill-color:#6b6b82;display:block}
-.stats{display:flex;gap:1.5rem;text-align:right}
-.snum{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;color:#4ade80}
-.slbl{font-size:0.7rem;color:#6b6b82;text-transform:uppercase}
-.wrap{max-width:1100px;margin:0 auto;padding:2rem}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
-@media(max-width:700px){.grid{grid-template-columns:1fr}}
-.card{background:#13131a;border:1px solid #2a2a38;border-radius:16px;padding:1.5rem}
-.ctitle{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:1.2rem;padding-left:10px;border-left:4px solid #4ade80}
-.lbl{font-size:0.78rem;color:#6b6b82;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px}
-.inp{width:100%;padding:10px 14px;background:#1c1c26;border:1px solid #2a2a38;border-radius:10px;color:#f0f0f8;font-size:0.9rem;outline:none;margin-bottom:1rem;font-family:'DM Sans',sans-serif}
-.inp:focus{border-color:#4ade80}
 
-/* FILE UPLOAD - simplest possible approach */
+/* ── TOKENS ── */
+:root{
+  --brand:#F5C842;
+  --brand-dark:#D4A800;
+  --brand-light:#FFF8DC;
+  --bg:#F7F8FA;
+  --surface:#FFFFFF;
+  --surface2:#F0F2F5;
+  --border:#E4E7EE;
+  --text:#1A1D27;
+  --text-muted:#6B7280;
+  --text-light:#9CA3AF;
+  --green:#16A34A;
+  --green-bg:#F0FDF4;
+  --red:#DC2626;
+  --red-bg:#FEF2F2;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow:0 4px 16px rgba(0,0,0,.08);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+  --radius:14px;
+  --radius-sm:8px;
+  --radius-lg:20px;
+}
+
+/* ── BASE ── */
+body{background:var(--bg);color:var(--text);font-family:'Inter','DM Sans',sans-serif;min-height:100vh;font-size:14px;line-height:1.5}
+
+/* ── HEADER ── */
+header{
+  padding:0 2rem;height:64px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface);box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:50;
+}
+.logo{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:10px}
+.logo-badge{background:var(--brand);color:var(--text);font-size:0.6rem;font-family:'Inter',sans-serif;font-weight:700;padding:2px 7px;border-radius:30px;text-transform:uppercase;letter-spacing:.06em;vertical-align:middle}
+.logo small{font-size:0.68rem;font-family:'Inter',sans-serif;font-weight:500;color:var(--text-muted);display:block;margin-top:1px}
+
+.stats{display:flex;gap:8px}
+.stat-pill{background:var(--surface2);border:1px solid var(--border);border-radius:30px;padding:6px 16px;display:flex;align-items:center;gap:8px}
+.snum{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text)}
+.slbl{font-size:0.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;font-weight:500}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1160px;margin:0 auto;padding:2rem 1.5rem}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.stats{display:none}}
+
+/* ── HOWTO BANNER ── */
+.howto{
+  background:var(--brand-light);border:1.5px solid var(--brand);border-radius:var(--radius);
+  padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start;
+  counter-reset:step;
+}
+.howto-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+.howto-body{}
+.howto-title{font-size:0.8rem;font-weight:700;color:var(--brand-dark);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.howto-steps{display:flex;flex-direction:column;gap:4px}
+.howto-step{font-size:0.8rem;color:#555;padding-left:1.3rem;position:relative;line-height:1.5}
+.howto-step::before{content:counter(step);counter-increment:step;position:absolute;left:0;color:var(--brand-dark);font-weight:800}
+a.hlink{color:var(--brand-dark);text-decoration:underline;font-weight:600}
+
+/* ── CARD ── */
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.5rem;box-shadow:var(--shadow-sm);
+}
+.ctitle{
+  font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:800;
+  color:var(--text);margin-bottom:1.25rem;display:flex;align-items:center;gap:8px;
+}
+.ctitle::before{content:'';width:4px;height:18px;background:var(--brand);border-radius:2px;display:inline-block;flex-shrink:0}
+
+/* ── FORM FIELDS ── */
+.lbl{font-size:0.72rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px}
+.inp{
+  width:100%;padding:10px 13px;background:var(--surface2);border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text);font-size:0.88rem;outline:none;
+  margin-bottom:1rem;font-family:'Inter','DM Sans',sans-serif;transition:border-color .15s,box-shadow .15s;
+}
+.inp:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(245,200,66,.18);background:var(--surface)}
+.inp[readonly]{color:var(--text-muted);background:var(--surface2)}
+
+/* ── FILE UPLOAD ── */
 .fgroup{margin-bottom:1rem}
 .fgroup .lbl{margin-bottom:6px}
-.frow{display:flex;align-items:center;gap:8px;background:#1c1c26;border:1px solid #2a2a38;border-radius:10px;padding:8px 12px}
-.frow.done{border-color:#22c55e}
-.ficon{font-size:1.3rem;flex-shrink:0}
-.fname{flex:1;font-size:0.82rem;color:#6b6b82;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.fname.ok{color:#22c55e}
-.mindstatus{display:flex;align-items:center;gap:6px;font-size:0.76rem;color:#6b6b82;margin-top:6px;padding-left:2px}
-.mindstatus.working{color:#4ade80}
+.frow{
+  display:flex;align-items:center;gap:8px;background:var(--surface2);
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;
+  transition:border-color .2s;
+}
+.frow.done{border-color:var(--green);background:var(--green-bg)}
+.ficon{font-size:1.2rem;flex-shrink:0}
+.fname{flex:1;font-size:0.8rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fname.ok{color:var(--green);font-weight:500}
+
+.mindstatus{display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-muted);margin-top:6px;padding-left:2px}
+.mindstatus.working{color:#D97706}
 .mindstatus.working span:first-child{display:inline-block;animation:spinTxt 1s linear infinite}
-.mindstatus.ok{color:#22c55e}
-.mindstatus.err{color:#f87171}
+.mindstatus.ok{color:var(--green);font-weight:500}
+.mindstatus.err{color:var(--red)}
 @keyframes spinTxt{to{transform:rotate(360deg)}}
-/* The actual file input - visible, styled as a button */
+
 .finput{
-  padding:5px 12px;border-radius:8px;border:1px solid #4ade80;
-  background:transparent;color:#4ade80;font-size:0.75rem;
-  cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0;
-  /* Override default file input styling */
-  width:auto;
+  padding:5px 12px;border-radius:6px;border:1.5px solid var(--brand);
+  background:transparent;color:var(--brand-dark);font-size:0.74rem;
+  cursor:pointer;font-family:'Inter','DM Sans',sans-serif;flex-shrink:0;width:auto;
+  font-weight:600;
 }
 .finput::file-selector-button{
-  padding:4px 10px;border-radius:6px;border:none;
-  background:linear-gradient(135deg,#4ade80,#16a34a);
-  color:#fff;font-size:0.75rem;cursor:pointer;
-  font-family:'DM Sans',sans-serif;margin-right:6px;
+  padding:4px 10px;border-radius:5px;border:none;
+  background:var(--brand);color:var(--text);font-size:0.74rem;font-weight:700;
+  cursor:pointer;font-family:'Inter','DM Sans',sans-serif;margin-right:6px;
 }
 .finput::-webkit-file-upload-button{
-  padding:4px 10px;border-radius:6px;border:none;
-  background:linear-gradient(135deg,#4ade80,#16a34a);
-  color:#fff;font-size:0.75rem;cursor:pointer;
-  font-family:'DM Sans',sans-serif;margin-right:6px;
+  padding:4px 10px;border-radius:5px;border:none;
+  background:var(--brand);color:var(--text);font-size:0.74rem;font-weight:700;
+  cursor:pointer;font-family:'Inter','DM Sans',sans-serif;margin-right:6px;
 }
 
+/* ── PROGRESS ── */
 .pbar{display:none;margin-bottom:1rem}
-.plbl{font-size:0.75rem;color:#6b6b82;margin-bottom:5px}
-.pbg{height:6px;background:#2a2a38;border-radius:3px;overflow:hidden}
-.pfill{height:100%;background:linear-gradient(90deg,#4ade80,#16a34a);width:0%;transition:width .3s;border-radius:3px}
+.plbl{font-size:0.73rem;color:var(--text-muted);margin-bottom:5px;font-weight:500}
+.pbg{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;border:1px solid var(--border)}
+.pfill{height:100%;background:linear-gradient(90deg,var(--brand),var(--brand-dark));width:0%;transition:width .3s;border-radius:3px}
 
-.sbtn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#4ade80,#16a34a);color:#fff;box-shadow:0 4px 20px rgba(74,222,128,.3)}
-.sbtn:disabled{opacity:.4;cursor:not-allowed}
-.smsg{padding:10px 14px;border-radius:10px;font-size:0.85rem;margin-top:10px;display:none}
-.smsg.ok{background:#052e16;color:#22c55e;border:1px solid #166534}
-.smsg.err{background:#2d0a0a;color:#f87171;border:1px solid #7f1d1d}
-.smsg.ld{background:#102818;color:#4ade80;border:1px solid #14532d}
+/* ── SUBMIT BUTTON ── */
+.sbtn{
+  width:100%;padding:13px;border:none;border-radius:var(--radius-sm);
+  font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:800;cursor:pointer;
+  background:var(--brand);color:var(--text);
+  box-shadow:0 4px 16px rgba(245,200,66,.35);
+  transition:background .15s,box-shadow .15s,transform .1s;
+  letter-spacing:.01em;
+}
+.sbtn:hover{background:var(--brand-dark);box-shadow:0 6px 20px rgba(245,200,66,.45);transform:translateY(-1px)}
+.sbtn:active{transform:translateY(0)}
+.sbtn:disabled{opacity:.45;cursor:not-allowed;transform:none}
 
-.htable{width:100%;border-collapse:collapse;font-size:0.83rem}
-.htable th{padding:9px 12px;text-align:left;color:#6b6b82;font-size:0.72rem;text-transform:uppercase;border-bottom:1px solid #2a2a38;font-weight:500}
-.htable td{padding:11px 12px;border-bottom:1px solid #2a2a38;vertical-align:middle}
+/* ── STATUS MESSAGES ── */
+.smsg{padding:10px 14px;border-radius:var(--radius-sm);font-size:0.84rem;margin-top:10px;display:none;font-weight:500}
+.smsg.ok{background:var(--green-bg);color:var(--green);border:1.5px solid #BBF7D0}
+.smsg.err{background:var(--red-bg);color:var(--red);border:1.5px solid #FECACA}
+.smsg.ld{background:#FFFBEB;color:#92400E;border:1.5px solid #FDE68A}
+
+/* ── TABLE ── */
+.htable{width:100%;border-collapse:collapse;font-size:0.82rem}
+.htable th{
+  padding:9px 12px;text-align:left;color:var(--text-muted);font-size:0.69rem;
+  text-transform:uppercase;letter-spacing:.06em;font-weight:700;
+  background:var(--surface2);border-bottom:1px solid var(--border);
+}
+.htable th:first-child{border-radius:var(--radius-sm) 0 0 0}
+.htable th:last-child{border-radius:0 var(--radius-sm) 0 0}
+.htable td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;color:var(--text)}
 .htable tr:last-child td{border-bottom:none}
-.htable tr:hover td{background:#1c1c26}
-.qbtn{padding:5px 10px;border-radius:8px;border:1px solid #4ade80;background:transparent;color:#4ade80;font-size:0.75rem;cursor:pointer;font-family:'DM Sans',sans-serif}
-.dbtn{padding:4px 9px;border-radius:8px;border:1px solid #7f1d1d;background:transparent;color:#f87171;font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:4px}
-.empty{text-align:center;padding:2.5rem;color:#6b6b82;font-size:0.88rem}
+.htable tbody tr:hover td{background:#F9FAFB}
 
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center}
+.qbtn{
+  padding:5px 11px;border-radius:6px;border:none;
+  background:var(--brand);color:var(--text);font-size:0.73rem;cursor:pointer;
+  font-family:'Inter','DM Sans',sans-serif;font-weight:700;
+  transition:background .15s;
+}
+.qbtn:hover{background:var(--brand-dark)}
+.dbtn{
+  padding:4px 9px;border-radius:6px;border:1.5px solid #FECACA;background:transparent;
+  color:var(--red);font-size:0.71rem;cursor:pointer;
+  font-family:'Inter','DM Sans',sans-serif;font-weight:600;margin-left:4px;
+  transition:background .15s;
+}
+.dbtn:hover{background:var(--red-bg)}
+.empty{text-align:center;padding:3rem 1rem;color:var(--text-muted);font-size:0.88rem}
+.empty::before{content:'📭';display:block;font-size:2rem;margin-bottom:.75rem}
+
+/* ── QR MODAL ── */
+.modal{display:none;position:fixed;inset:0;background:rgba(15,15,25,.55);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center;padding:1rem}
 .modal.open{display:flex}
-.mbox{background:#13131a;border:1px solid #2a2a38;border-radius:20px;padding:2rem;text-align:center;max-width:320px;width:90%}
-.mtitle{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:4px}
-.msub{font-size:0.78rem;color:#6b6b82;margin-bottom:1.2rem}
-#qrc{margin:0 auto 1rem;background:#fff;padding:12px;border-radius:12px;display:inline-block}
-.mlink{font-size:0.7rem;color:#4ade80;word-break:break-all;background:#1c1c26;padding:7px 10px;border-radius:8px;margin-bottom:10px;cursor:pointer;border:1px solid #2a2a38;display:block}
-.mcls{padding:8px 20px;border-radius:10px;border:1px solid #2a2a38;background:transparent;color:#6b6b82;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.85rem;margin-top:6px}
+.mbox{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:2rem;text-align:center;max-width:340px;width:100%;
+  box-shadow:var(--shadow-lg);
+}
+.mbox-header{margin-bottom:1.25rem}
+.mtitle{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;margin-bottom:3px;color:var(--text)}
+.msub{font-size:0.77rem;color:var(--text-muted);font-family:'Inter',sans-serif}
+#qrc{margin:0 auto 1rem;background:#fff;padding:12px;border-radius:12px;display:inline-block;border:1px solid var(--border)}
+.mlink{
+  font-size:0.7rem;color:var(--brand-dark);word-break:break-all;
+  background:var(--brand-light);padding:8px 10px;border-radius:var(--radius-sm);
+  margin-bottom:10px;cursor:pointer;border:1.5px solid var(--brand);display:block;
+  font-weight:600;transition:background .15s;
+}
+.mlink:hover{background:#FFF0A0}
+.whatsapp-hint{font-size:0.71rem;color:var(--text-muted);margin-bottom:12px;background:var(--green-bg);padding:6px 10px;border-radius:6px;border:1px solid #BBF7D0}
+.mcls{
+  padding:9px 22px;border-radius:var(--radius-sm);border:1.5px solid var(--border);
+  background:transparent;color:var(--text-muted);cursor:pointer;
+  font-family:'Inter','DM Sans',sans-serif;font-size:0.85rem;font-weight:600;
+  transition:background .15s,color .15s;
+}
+.mcls:hover{background:var(--surface2);color:var(--text)}
 
-.howto{background:#1c1c26;border:1px solid #2a2a38;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.5rem}
-.howto-title{font-size:0.82rem;font-weight:600;color:#4ade80;margin-bottom:8px}
-.howto-step{font-size:0.8rem;color:#6b6b82;margin-bottom:5px;padding-left:1rem;position:relative;line-height:1.5}
-.howto-step::before{content:counter(step);counter-increment:step;position:absolute;left:0;color:#4ade80;font-weight:700}
-.howto{counter-reset:step}
-a.hlink{color:#4ade80;text-decoration:none;font-weight:600}
-
-/* LOGIN SCREEN */
+/* ── LOGIN SCREEN ── */
 #login-screen{
-  position:fixed;inset:0;z-index:99999;background:#07070f;
+  position:fixed;inset:0;z-index:99999;
+  background:linear-gradient(135deg,#FDFBE9 0%,#F7F8FA 60%,#EEF2FF 100%);
   display:flex;align-items:center;justify-content:center;padding:1.5rem;
 }
 #login-screen.hide{display:none}
 .lbox{
-  background:#13131a;border:1px solid #2a2a38;border-radius:20px;
-  padding:2.5rem 2rem;width:100%;max-width:360px;text-align:center;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:2.5rem 2rem;width:100%;max-width:380px;text-align:center;
+  box-shadow:var(--shadow-lg);
 }
-.lbox .brand{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;
-  background:linear-gradient(135deg,#4ade80,#16a34a);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
-.lbox .ltag{font-size:0.72rem;color:#6b6b82;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2rem}
+.login-logo-wrap{margin-bottom:1.5rem}
+.login-emoji{font-size:2.5rem;margin-bottom:.5rem;display:block}
+.lbox .brand{
+  font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;color:var(--text);
+  margin-bottom:2px;
+}
+.lbox .brand span{
+  background:var(--brand);padding:0 6px;border-radius:5px;display:inline;
+}
+.lbox .ltag{font-size:0.72rem;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2rem;font-weight:600}
+.linp-wrap{text-align:left;margin-bottom:1rem}
+.linp-wrap .lbl{margin-bottom:5px}
 .linp{
-  width:100%;padding:11px 14px;background:#1c1c26;border:1px solid #2a2a38;
-  border-radius:10px;color:#f0f0f8;font-size:0.9rem;outline:none;
-  margin-bottom:1rem;font-family:'DM Sans',sans-serif;text-align:left;
+  width:100%;padding:11px 14px;background:var(--surface2);border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text);font-size:0.9rem;outline:none;
+  font-family:'Inter','DM Sans',sans-serif;transition:border-color .15s,box-shadow .15s;
 }
-.linp:focus{border-color:#4ade80}
+.linp:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(245,200,66,.2);background:var(--surface)}
 .lbtn{
-  width:100%;padding:13px;border:none;border-radius:12px;
-  font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;
-  cursor:pointer;background:linear-gradient(135deg,#4ade80,#16a34a);
-  color:#fff;box-shadow:0 4px 20px rgba(74,222,128,.3);margin-top:4px;
+  width:100%;padding:13px;border:none;border-radius:var(--radius-sm);
+  font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;
+  cursor:pointer;background:var(--brand);color:var(--text);
+  box-shadow:0 4px 16px rgba(245,200,66,.4);margin-top:4px;
+  transition:background .15s,box-shadow .15s,transform .1s;letter-spacing:.01em;
 }
+.lbtn:hover{background:var(--brand-dark);box-shadow:0 6px 24px rgba(245,200,66,.5);transform:translateY(-1px)}
 .lerr{
-  margin-top:10px;padding:9px 14px;border-radius:10px;
-  background:#2d0a0a;color:#f87171;border:1px solid #7f1d1d;
-  font-size:0.82rem;display:none;
+  margin-top:10px;padding:9px 14px;border-radius:var(--radius-sm);
+  background:var(--red-bg);color:var(--red);border:1.5px solid #FECACA;
+  font-size:0.82rem;display:none;font-weight:500;
 }
 </style>
 </head>
@@ -137,29 +265,56 @@ a.hlink{color:#4ade80;text-decoration:none;font-weight:600}
 <!-- LOGIN SCREEN -->
 <div id="login-screen">
   <div class="lbox">
-    <div class="brand">SnapAndWrap</div>
-    <div class="ltag">Admin Access</div>
-    <input class="linp" type="text" id="l-user" placeholder="Username" autocomplete="username">
-    <input class="linp" type="password" id="l-pass" placeholder="Password" autocomplete="current-password">
-    <button class="lbtn" onclick="doLogin()">🔐 Login</button>
+    <div class="login-logo-wrap">
+      <span class="login-emoji">✨</span>
+      <div class="brand">Snap<span>And</span>Wrap</div>
+      <div class="ltag">Admin Access</div>
+    </div>
+    <div class="linp-wrap">
+      <span class="lbl">Username</span>
+      <input class="linp" type="text" id="l-user" placeholder="Enter username" autocomplete="username">
+    </div>
+    <div class="linp-wrap">
+      <span class="lbl">Password</span>
+      <input class="linp" type="password" id="l-pass" placeholder="Enter password" autocomplete="current-password">
+    </div>
+    <button class="lbtn" onclick="doLogin()">🔐 Sign In</button>
     <div class="lerr" id="l-err">Incorrect username or password.</div>
   </div>
 </div>
 
 <header>
-  <div class="logo">SnapAndWrap <small>Admin Dashboard</small></div>
+  <div class="logo">
+    SnapAndWrap <span class="logo-badge">Admin</span>
+    <small>Dashboard</small>
+  </div>
   <div class="stats">
-    <div><div class="snum" id="total-orders">0</div><div class="slbl">Orders</div></div>
-    <div><div class="snum" id="total-scans">0</div><div class="slbl">Scans</div></div>
+    <div class="stat-pill">
+      <div>
+        <div class="snum" id="total-orders">0</div>
+        <div class="slbl">Orders</div>
+      </div>
+    </div>
+    <div class="stat-pill">
+      <div>
+        <div class="snum" id="total-scans">0</div>
+        <div class="slbl">Scans</div>
+      </div>
+    </div>
   </div>
 </header>
 
 <div class="wrap">
   <div class="howto">
-    <div class="howto-title">📋 How to add each order</div>
-    <div class="howto-step">Fill form below → select frame photo (AR tracker auto-generates) + video → click Add Order</div>
-    <div class="howto-step">Wait for the green "AR tracker ready" check before submitting</div>
-    <div class="howto-step">QR generated → screenshot → send to customer via WhatsApp</div>
+    <div class="howto-icon">📋</div>
+    <div class="howto-body">
+      <div class="howto-title">How to add each order</div>
+      <div class="howto-steps">
+        <div class="howto-step">Fill the form below → select frame photo (AR tracker auto-generates) + video → click Add Order</div>
+        <div class="howto-step">Wait for the green "AR tracker ready" check before submitting</div>
+        <div class="howto-step">QR generated → screenshot → send to customer via WhatsApp</div>
+      </div>
+    </div>
   </div>
 
   <div class="grid">
@@ -173,7 +328,7 @@ a.hlink{color:#4ade80;text-decoration:none;font-weight:600}
       <input class="inp" type="tel" id="f-phone" placeholder="e.g. 9876543210">
 
       <span class="lbl">Order ID</span>
-      <input class="inp" type="text" id="f-oid" readonly style="color:#6b6b82">
+      <input class="inp" type="text" id="f-oid" readonly style="color:var(--text-muted)">
 
       <div class="fgroup">
         <span class="lbl">Frame Photo (JPG/PNG)</span>
@@ -215,11 +370,13 @@ a.hlink{color:#4ade80;text-decoration:none;font-weight:600}
 
 <div class="modal" id="qr-modal">
   <div class="mbox">
-    <div class="mtitle" id="m-name"></div>
-    <div class="msub" id="m-oid"></div>
+    <div class="mbox-header">
+      <div class="mtitle" id="m-name"></div>
+      <div class="msub" id="m-oid"></div>
+    </div>
     <div id="qrc"></div>
     <div class="mlink" id="m-link" onclick="copyLink()"></div>
-    <div style="font-size:0.72rem;color:#6b6b82;margin-bottom:10px">📱 Screenshot → send via WhatsApp</div>
+    <div class="whatsapp-hint">📱 Screenshot this QR → send via WhatsApp</div>
     <button class="mcls" onclick="document.getElementById('qr-modal').classList.remove('open')">Close</button>
   </div>
 </div>
@@ -485,8 +642,8 @@ db.ref('orders').on('value',snap=>{
   list.forEach(o=>{
     const lk=base+'?order='+o.orderId;
     h+=`<tr>
-      <td><b>${o.customerName}</b><br><span style="font-size:.72rem;color:#6b6b82">${o.phone}</span></td>
-      <td style="font-family:monospace;font-size:.75rem;color:#6b6b82">${o.orderId}</td>
+      <td><b style="color:var(--text)">${o.customerName}</b><br><span style="font-size:.72rem;color:var(--text-muted)">${o.phone}</span></td>
+      <td style="font-family:monospace;font-size:.75rem;color:var(--text-muted)">${o.orderId}</td>
       <td>👁 ${o.scanCount||0}</td>
       <td>${o.videoURL?'✅':'❌'}</td>
       <td>
